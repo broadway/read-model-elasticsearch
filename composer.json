@@ -1,0 +1,55 @@
+{
+    "name": "broadway/read-model-elasticsearch",
+    "description": "Elasticsearch read model implementation using elastic/elasticsearch-php",
+    "license": "MIT",
+    "require": {
+        "php": ">=5.5.9",
+        "broadway/broadway": "^1.0@dev",
+        "elasticsearch/elasticsearch": "~1.0|^2.0"
+    },
+    "authors": [
+      {
+        "name": "Alexander",
+        "email": "iam.asm89@gmail.com"
+      },
+      {
+        "name": "Emil",
+        "email": "emil@broekmeulen.com"
+      },
+      {
+        "name": "Fritsjan",
+        "email": "fritsjan@qandidate.com"
+      },
+      {
+        "name": "othillo",
+        "email": "othillo@othillo.nl"
+      },
+      {
+        "name": "Willem-Jan",
+        "email": "wjzijderveld@gmail.com"
+      },
+      {
+        "name": "Qandidate.com",
+        "homepage": "http://labs.qandidate.com/"
+      }
+    ],
+    "require-dev": {
+      "phpunit/phpunit": "^4.8"
+    },
+    "autoload": {
+        "psr-4": {
+            "Broadway\\ReadModel\\ElasticSearch\\": "src/"
+        }
+    },
+    "autoload-dev": {
+      "psr-4": {
+        "Broadway\\ReadModel\\ElasticSearch\\": "test/",
+        "Broadway\\": "vendor/broadway/broadway/test/Broadway/"
+      }
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "0.2.x-dev"
+        }
+    }
+}

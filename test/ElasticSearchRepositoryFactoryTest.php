@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the broadway/broadway package.
+ * This file is part of the broadway/read-model-elasticsearch package.
  *
  * (c) Qandidate.com <opensource@qandidate.com>
  *
@@ -11,9 +11,9 @@
 
 namespace Broadway\ReadModel\ElasticSearch;
 
-use Broadway\TestCase;
+use PHPUnit_Framework_TestCase;
 
-class ElasticSearchRepositoryFactoryTest extends TestCase
+class ElasticSearchRepositoryFactoryTest extends PHPUnit_Framework_TestCase
 {
     /**
      * @test

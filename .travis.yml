@@ -1,14 +1,27 @@
 language: php
 
-sudo: false
+sudo: true
 
-php:
-  - 5.6
-  - 7.0
-  - 7.1
-  - hhvm
+matrix:
+  fast_finish: true
+  include:
+    - php: 5.6
+    - php: 7.0
+    - php: 7.1
+      env: ES_VERSION="2.4.4"
+    - php: 7.1
+      env: ES_VERSION="1.7.6" DOWNLOAD_URL="https://download.elastic.co/elasticsearch/elasticsearch/elasticsearch-${ES_VERSION}.deb"
+    - php: hhvm
+  allow_failures:
+    - php: hhvm
+
+env:
+  global:
+    - ES_VERSION="2.4.4"
+    - DOWNLOAD_URL="https://download.elastic.co/elasticsearch/release/org/elasticsearch/distribution/deb/elasticsearch/${ES_VERSION}/elasticsearch-${ES_VERSION}.deb"
 
 before_install:
+  - curl -O $DOWNLOAD_URL && sudo dpkg -i --force-confnew elasticsearch-${ES_VERSION}.deb && sudo service elasticsearch restart
   - phpenv config-rm xdebug.ini || return 0
   - echo "memory_limit=2G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini || return 0
 
@@ -23,6 +36,3 @@ script:
 branches:
   only:
     - master
-
-services:
-  - elasticsearch

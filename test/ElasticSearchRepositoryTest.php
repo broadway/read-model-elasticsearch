@@ -96,8 +96,6 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
 
     private function createClient()
     {
-        $clientFactory = new ElasticSearchClientFactory();
-
-        return $clientFactory->create(['hosts' => ['localhost:9200']]);
+        return (new ElasticSearchClientFactory())->create(['hosts' => ['localhost:9200']]);
     }
 }

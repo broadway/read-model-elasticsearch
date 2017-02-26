@@ -1,7 +1,7 @@
 <?php
 
 /*
- * This file is part of the broadway/broadway package.
+ * This file is part of the broadway/read-model-elasticsearch package.
  *
  * (c) Qandidate.com <opensource@qandidate.com>
  *
@@ -182,7 +182,7 @@ class ElasticSearchRepository implements RepositoryInterface
         return [
             'filtered' => [
                 'query' => [
-                    'match_all' => [],
+                    'match_all' => new \stdClass(),
                 ],
                 'filter' => $this->buildFilter($fields)
             ]
@@ -192,7 +192,7 @@ class ElasticSearchRepository implements RepositoryInterface
     private function buildFindAllQuery()
     {
         return [
-            'match_all' => [],
+            'match_all' => new \stdClass(),
         ];
     }
 

@@ -12,6 +12,7 @@
 namespace Broadway\ReadModel\ElasticSearch;
 
 use Elasticsearch\Client;
+use Elasticsearch\ClientBuilder;
 
 class ElasticSearchClientFactory
 {
@@ -22,10 +23,6 @@ class ElasticSearchClientFactory
      */
     public function create(array $config)
     {
-        if (class_exists('\Elasticsearch\ClientBuilder')) {
-            return \Elasticsearch\ClientBuilder::fromConfig($config);
-        }
-
-        return new Client($config);
+        return ClientBuilder::fromConfig($config);
     }
 }

@@ -12,16 +12,16 @@
 namespace Broadway\ReadModel\ElasticSearch;
 
 use Assert\Assertion;
-use Broadway\ReadModel\ReadModelInterface;
-use Broadway\ReadModel\RepositoryInterface;
-use Broadway\Serializer\SerializerInterface;
+use Broadway\ReadModel\Identifiable;
+use Broadway\ReadModel\Repository;
+use Broadway\Serializer\Serializer;
 use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
 
 /**
  * Repository implementation using Elasticsearch as storage.
  */
-class ElasticSearchRepository implements RepositoryInterface
+class ElasticSearchRepository implements Repository
 {
     private $client;
     private $serializer;
@@ -36,7 +36,7 @@ class ElasticSearchRepository implements RepositoryInterface
      */
     public function __construct(
         Client $client,
-        SerializerInterface $serializer,
+        Serializer $serializer,
         $index,
         $class,
         array $notAnalyzedFields = []
@@ -51,7 +51,7 @@ class ElasticSearchRepository implements RepositoryInterface
     /**
      * {@inheritDoc}
      */
-    public function save(ReadModelInterface $data)
+    public function save(Identifiable $data)
     {
         Assertion::isInstanceOf($data, $this->class);
 

@@ -12,7 +12,7 @@
 namespace Broadway\ReadModel\ElasticSearch;
 
 use Broadway\ReadModel\RepositoryTestCase;
-use Broadway\Serializer\SerializerInterface;
+use Broadway\Serializer\Serializer;
 use Broadway\Serializer\SimpleInterfaceSerializer;
 use Elasticsearch\Client;
 
@@ -38,7 +38,7 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
         );
     }
 
-    protected function createElasticSearchRepository(Client $client, SerializerInterface $serializer, $index, $class)
+    protected function createElasticSearchRepository(Client $client, Serializer $serializer, $index, $class)
     {
         return new ElasticSearchRepository($client, $serializer, $index, $class);
     }
@@ -80,7 +80,7 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
      */
     public function it_throws_when_saving_a_readmodel_of_other_type_than_configured()
     {
-        $readModel = $this->prophesize('\Broadway\ReadModel\ReadModelInterface');
+        $readModel = $this->prophesize('\Broadway\ReadModel\Identifiable');
 
         $this->repository->save($readModel->reveal());
     }

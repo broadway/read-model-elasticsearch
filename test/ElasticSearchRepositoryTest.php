@@ -11,7 +11,9 @@
 
 namespace Broadway\ReadModel\ElasticSearch;
 
-use Broadway\ReadModel\RepositoryTestCase;
+use Broadway\ReadModel\Repository;
+use Broadway\ReadModel\Testing\RepositoryTestCase;
+use Broadway\ReadModel\Testing\RepositoryTestReadModel;
 use Broadway\Serializer\Serializer;
 use Broadway\Serializer\SimpleInterfaceSerializer;
 use Elasticsearch\Client;
@@ -34,7 +36,7 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
             $this->client,
             new SimpleInterfaceSerializer(),
             'test_index',
-            'Broadway\ReadModel\RepositoryTestReadModel'
+            RepositoryTestReadModel::class
         );
     }
 

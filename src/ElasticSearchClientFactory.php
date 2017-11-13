@@ -16,12 +16,7 @@ use Elasticsearch\ClientBuilder;
 
 class ElasticSearchClientFactory
 {
-    /**
-     * @param array $config
-     *
-     * @return Client
-     */
-    public function create(array $config)
+    public function create(array $config): Client
     {
         return ClientBuilder::fromConfig($config);
     }

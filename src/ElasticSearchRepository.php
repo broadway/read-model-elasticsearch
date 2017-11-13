@@ -29,16 +29,11 @@ class ElasticSearchRepository implements Repository
     private $class;
     private $notAnalyzedFields;
 
-    /**
-     * @param string $index
-     * @param string $class
-     * @param array  $notAnalyzedFields = array
-     */
     public function __construct(
         Client $client,
         Serializer $serializer,
-        $index,
-        $class,
+        string $index,
+        string $class,
         array $notAnalyzedFields = []
     ) {
         $this->client            = $client;
@@ -91,7 +86,7 @@ class ElasticSearchRepository implements Repository
     /**
      * {@inheritDoc}
      */
-    public function findBy(array $fields)
+    public function findBy(array $fields): array
     {
         if (empty($fields)) {
             return [];
@@ -103,7 +98,7 @@ class ElasticSearchRepository implements Repository
     /**
      * {@inheritDoc}
      */
-    public function findAll()
+    public function findAll(): array
     {
         return $this->query($this->buildFindAllQuery());
     }
@@ -139,14 +134,7 @@ class ElasticSearchRepository implements Repository
         return $this->deserializeHits($result['hits']['hits']);
     }
 
-    /**
-     * @param array   $query
-     * @param array   $facets
-     * @param integer $size
-     *
-     * @return array
-     */
-    protected function search(array $query, array $facets = [], $size = 500)
+    protected function search(array $query, array $facets = [], int $size = 500): array
     {
         try {
             return $this->client->search([
@@ -177,7 +165,7 @@ class ElasticSearchRepository implements Repository
         );
     }
 
-    private function buildFindByQuery(array $fields)
+    private function buildFindByQuery(array $fields): array
     {
         return [
             'bool' => [
@@ -186,7 +174,7 @@ class ElasticSearchRepository implements Repository
         ];
     }
 
-    private function buildFindAllQuery()
+    private function buildFindAllQuery(): array
     {
         return [
             'match_all' => new \stdClass(),
@@ -224,7 +212,7 @@ class ElasticSearchRepository implements Repository
      *
      * @return boolean True, if the index was successfully created
      */
-    public function createIndex()
+    public function createIndex(): bool
     {
         $class = $this->class;
 
@@ -260,7 +248,7 @@ class ElasticSearchRepository implements Repository
      *
      * @return True, if the index was successfully deleted
      */
-    public function deleteIndex()
+    public function deleteIndex(): bool
     {
         $indexParams = [
             'index'   => $this->index,
@@ -278,7 +266,7 @@ class ElasticSearchRepository implements Repository
         return isset($response['status']) && $response['status'] !== 'red';
     }
 
-    private function createNotAnalyzedFieldsMapping(array $notAnalyzedFields)
+    private function createNotAnalyzedFieldsMapping(array $notAnalyzedFields): array
     {
         $fields = [];
 

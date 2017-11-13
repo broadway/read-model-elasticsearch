@@ -11,6 +11,8 @@
 
 namespace Broadway\ReadModel\ElasticSearch;
 
+use Broadway\Serializer\Serializer;
+use Elasticsearch\Client;
 use PHPUnit_Framework_TestCase;
 
 class ElasticSearchRepositoryFactoryTest extends PHPUnit_Framework_TestCase
@@ -20,9 +22,9 @@ class ElasticSearchRepositoryFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function it_creates_an_elastic_search_repository()
     {
-        $serializer = $this->getMockBuilder('Broadway\Serializer\Serializer')
+        $serializer = $this->getMockBuilder(Serializer::class)
             ->getMock();
-        $client = $this->getMockBuilder('\Elasticsearch\Client')
+        $client = $this->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
             ->getMock();
 
@@ -37,9 +39,9 @@ class ElasticSearchRepositoryFactoryTest extends PHPUnit_Framework_TestCase
      */
     public function it_creates_an_elastic_search_repository_containing_index_metadata()
     {
-        $serializer = $this->getMockBuilder('Broadway\Serializer\Serializer')
+        $serializer = $this->getMockBuilder(Serializer::class)
             ->getMock();
-        $client = $this->getMockBuilder('\Elasticsearch\Client')
+        $client = $this->getMockBuilder(Client::class)
             ->disableOriginalConstructor()
             ->getMock();
 

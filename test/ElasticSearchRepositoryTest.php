@@ -26,7 +26,7 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
 {
     private $client;
 
-    protected function createRepository()
+    protected function createRepository(): Repository
     {
         $this->client = $this->createClient();
         $this->client->indices()->create(['index' => 'test_index']);
@@ -40,7 +40,7 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
         );
     }
 
-    protected function createElasticSearchRepository(Client $client, Serializer $serializer, $index, $class)
+    protected function createElasticSearchRepository(Client $client, Serializer $serializer, string $index, string $class)
     {
         return new ElasticSearchRepository($client, $serializer, $index, $class);
     }

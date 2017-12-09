@@ -11,6 +11,7 @@
 
 namespace Broadway\ReadModel\ElasticSearch;
 
+use Broadway\ReadModel\Repository;
 use Broadway\ReadModel\RepositoryFactory;
 use Broadway\Serializer\Serializer;
 use Elasticsearch\Client;
@@ -32,7 +33,7 @@ class ElasticSearchRepositoryFactory implements RepositoryFactory
     /**
      * {@inheritDoc}
      */
-    public function create($name, $class, array $notAnalyzedFields = [])
+    public function create(string $name, string $class, array $notAnalyzedFields = []): Repository
     {
         return new ElasticSearchRepository($this->client, $this->serializer, $name, $class, $notAnalyzedFields);
     }

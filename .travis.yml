@@ -27,7 +27,7 @@ before_install:
 
 install:
   - travis_retry composer install
-  - composer info -i
+  - composer info
 
 script:
   - phpunit --exclude-group=none

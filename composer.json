@@ -3,7 +3,7 @@
     "description": "Elasticsearch read model implementation using elastic/elasticsearch-php",
     "license": "MIT",
     "require": {
-        "php": ">=7.0",
+        "php": ">=7.1",
         "broadway/broadway": "^2.0",
         "elasticsearch/elasticsearch": "^5.0"
     },

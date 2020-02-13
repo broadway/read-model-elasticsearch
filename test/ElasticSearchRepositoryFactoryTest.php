@@ -13,9 +13,9 @@ namespace Broadway\ReadModel\ElasticSearch;
 
 use Broadway\Serializer\Serializer;
 use Elasticsearch\Client;
-use PHPUnit_Framework_TestCase;
+use PHPUnit\Framework\TestCase;
 
-class ElasticSearchRepositoryFactoryTest extends PHPUnit_Framework_TestCase
+class ElasticSearchRepositoryFactoryTest extends TestCase
 {
     /**
      * @test

@@ -78,16 +78,16 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
 
     /**
      * @test
-     * @expectedException \Assert\InvalidArgumentException
      */
     public function it_throws_when_saving_a_readmodel_of_other_type_than_configured()
     {
+        $this->expectException('Assert\InvalidArgumentException');
         $readModel = $this->prophesize('\Broadway\ReadModel\Identifiable');
 
         $this->repository->save($readModel->reveal());
     }
 
-    public function tearDown()
+    public function tearDown(): void
     {
         $this->client->indices()->delete(['index' => 'test_index']);
 

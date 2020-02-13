@@ -87,6 +87,26 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
         $this->repository->save($readModel->reveal());
     }
 
+    /**
+     * @test
+     * {@inheritDoc}
+     */
+    public function it_returns_all_read_models()
+    {
+        $model1 = $this->createReadModel('1', 'othillo', 'bar');
+        $model2 = $this->createReadModel('2', 'asm89', 'baz');
+        $model3 = $this->createReadModel('3', 'edelprino', 'baz');
+
+        $this->repository->save($model1);
+        $this->repository->save($model2);
+        $this->repository->save($model3);
+
+        $allReadModels = $this->repository->findAll();
+        $this->assertTrue(in_array($model1, $allReadModels));
+        $this->assertTrue(in_array($model2, $allReadModels));
+        $this->assertTrue(in_array($model3, $allReadModels));
+    }
+
     public function tearDown(): void
     {
         $this->client->indices()->delete(['index' => 'test_index']);

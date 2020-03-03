@@ -41,3 +41,4 @@ To run all the tests:
 ## License
 
 MIT, see LICENSE.
+[![Build Status](https://travis-ci.org/broadway/read-model-elasticsearch.svg?branch=master)](https://travis-ci.org/broadway/read-model-elasticsearch)

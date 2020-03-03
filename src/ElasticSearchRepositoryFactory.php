@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the broadway/read-model-elasticsearch package.
  *
@@ -26,12 +28,12 @@ class ElasticSearchRepositoryFactory implements RepositoryFactory
 
     public function __construct(Client $client, Serializer $serializer)
     {
-        $this->client     = $client;
+        $this->client = $client;
         $this->serializer = $serializer;
     }
 
     /**
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function create(string $name, string $class, array $notAnalyzedFields = []): Repository
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the broadway/read-model-elasticsearch package.
  *
@@ -50,9 +52,9 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
      */
     public function it_creates_an_index_with_non_analyzed_terms()
     {
-        $type             = 'class';
-        $nonAnalyzedTerm  = 'name';
-        $index            = 'test_non_analyzed_index';
+        $type = 'class';
+        $nonAnalyzedTerm = 'name';
+        $index = 'test_non_analyzed_index';
         $this->repository = new ElasticSearchRepository(
             $this->client,
             new SimpleInterfaceSerializer(),
@@ -89,7 +91,7 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
 
     /**
      * @test
-     * {@inheritDoc}
+     * {@inheritdoc}
      */
     public function it_returns_all_read_models()
     {

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /*
  * This file is part of the broadway/read-model-elasticsearch package.
  *
@@ -29,7 +31,7 @@ class ElasticSearchRepositoryFactoryTest extends TestCase
             ->getMock();
 
         $repository = new ElasticSearchRepository($client, $serializer, 'test', 'Class');
-        $factory    = new ElasticSearchRepositoryFactory($client, $serializer);
+        $factory = new ElasticSearchRepositoryFactory($client, $serializer);
 
         $this->assertEquals($repository, $factory->create('test', 'Class'));
     }
@@ -46,7 +48,7 @@ class ElasticSearchRepositoryFactoryTest extends TestCase
             ->getMock();
 
         $repository = new ElasticSearchRepository($client, $serializer, 'test', 'Class', ['id']);
-        $factory    = new ElasticSearchRepositoryFactory($client, $serializer);
+        $factory = new ElasticSearchRepositoryFactory($client, $serializer);
 
         $this->assertEquals($repository, $factory->create('test', 'Class', ['id']));
     }

@@ -9,7 +9,7 @@ php:
   - 7.4
 
 env:
-  - ELASTICSEARCH_DOWNLOAD_URL=https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.8.8.deb
+  - ELASTICSEARCH_DOWNLOAD_URL=https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.6.2-amd64.deb
 
 before_install:
   # Disable XDebug speed up test execution.

@@ -1,6 +1,8 @@
 version: '3.2'
 services:
   elasticsearch:
-    image: elasticsearch:6.8.8
+    image: elasticsearch:7.6.2
     ports:
       - "9200:9200"
+    environment:
+      - discovery.type=single-node

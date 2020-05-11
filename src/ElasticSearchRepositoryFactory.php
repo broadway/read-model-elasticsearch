@@ -23,7 +23,10 @@ use Elasticsearch\Client;
  */
 class ElasticSearchRepositoryFactory implements RepositoryFactory
 {
+    /** @var Client */
     private $client;
+
+    /** @var Serializer */
     private $serializer;
 
     public function __construct(Client $client, Serializer $serializer)

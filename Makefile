@@ -10,7 +10,7 @@ test:
 	vendor/bin/phpunit --testdox --colors=always --group=functional
 
 .PHONY: qa
-qa: php-cs-fixer-ci
+qa: php-cs-fixer-ci phpstan
 
 .PHONY: php-cs-fixer
 php-cs-fixer:
@@ -19,6 +19,10 @@ php-cs-fixer:
 .PHONY: php-cs-fixer-ci
 php-cs-fixer-ci:
 	vendor/bin/php-cs-fixer fix --dry-run --no-interaction --allow-risky=yes --diff --verbose
+
+PHONY: phpstan
+phpstan:
+	vendor/bin/phpstan analyse --level=max src/
 
 .PHONY: changelog
 changelog:

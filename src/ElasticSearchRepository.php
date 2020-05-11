@@ -25,10 +25,19 @@ use Elasticsearch\Common\Exceptions\Missing404Exception;
  */
 class ElasticSearchRepository implements Repository
 {
+    /** @var Client */
     private $client;
+
+    /** @var Serializer */
     private $serializer;
+
+    /** @var string */
     private $index;
+
+    /** @var string */
     private $class;
+
+    /** @var string[] */
     private $notAnalyzedFields;
 
     public function __construct(
@@ -121,7 +130,7 @@ class ElasticSearchRepository implements Repository
         }
     }
 
-    private function searchAndDeserializeHits(array $query)
+    private function searchAndDeserializeHits(array $query): array
     {
         try {
             $result = $this->client->search($query);
@@ -153,7 +162,7 @@ class ElasticSearchRepository implements Repository
         }
     }
 
-    protected function query(array $query)
+    protected function query(array $query): array
     {
         return $this->searchAndDeserializeHits(
             [
@@ -183,7 +192,7 @@ class ElasticSearchRepository implements Repository
         ];
     }
 
-    private function deserializeHit(array $hit)
+    private function deserializeHit(array $hit): Identifiable
     {
         return $this->serializer->deserialize(
             [
@@ -193,12 +202,12 @@ class ElasticSearchRepository implements Repository
         );
     }
 
-    private function deserializeHits(array $hits)
+    private function deserializeHits(array $hits): array
     {
         return array_map([$this, 'deserializeHit'], $hits);
     }
 
-    private function buildFilter(array $filter)
+    private function buildFilter(array $filter): array
     {
         $retval = [];
 
@@ -247,8 +256,6 @@ class ElasticSearchRepository implements Repository
 
     /**
      * Deletes the index for this repository's ReadModel.
-     *
-     * @return True, if the index was successfully deleted
      */
     public function deleteIndex(): bool
     {

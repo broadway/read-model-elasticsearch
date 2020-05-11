@@ -234,12 +234,10 @@ class ElasticSearchRepository implements Repository
         if (count($this->notAnalyzedFields)) {
             $indexParams['body'] = [
                 'mappings' => [
-                    $class => [
-                        '_source' => [
-                            'enabled' => true,
-                        ],
-                        'properties' => $this->createNotAnalyzedFieldsMapping($this->notAnalyzedFields),
+                    '_source' => [
+                        'enabled' => true,
                     ],
+                    'properties' => $this->createNotAnalyzedFieldsMapping($this->notAnalyzedFields),
                 ],
             ];
         }

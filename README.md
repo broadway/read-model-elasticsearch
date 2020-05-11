@@ -16,6 +16,7 @@ $ composer require broadway/read-model-elasticsearch
 
 | Elasticsearch Version | broadway/read-model-elasticsearch version |
 | --------------------- | ----------------------------------------- |
+| 7                     | 0.7                                       |
 | 6                     | 0.6                                       |
 | 5                     | 0.5                                       |
 | 2                     | 0.1                                       |

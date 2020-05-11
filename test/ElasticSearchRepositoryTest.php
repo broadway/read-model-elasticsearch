@@ -67,15 +67,18 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
         $this->client->cluster()->health(['index' => $index, 'wait_for_status' => 'yellow', 'timeout' => '10s']);
         $mapping = $this->client->indices()->getMapping(['index' => $index]);
 
-        $this->assertArrayHasKey($index, $mapping);
-        $this->assertArrayHasKey($type, $mapping[$index]['mappings']);
-        $nonAnalyzedTerms = [];
-
-        foreach ($mapping[$index]['mappings'][$type]['properties'] as $key => $value) {
-            $nonAnalyzedTerms[] = $key;
-        }
-
-        $this->assertEquals([$nonAnalyzedTerm], $nonAnalyzedTerms);
+        $expectedMapping = [
+            'test_non_analyzed_index' => [
+                'mappings' => [
+                    'properties' => [
+                        'name' => [
+                            'type' => 'keyword',
+                        ],
+                    ],
+                ],
+            ],
+        ];
+        $this->assertEquals($expectedMapping, $mapping);
     }
 
     /**

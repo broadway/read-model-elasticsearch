@@ -82,7 +82,7 @@ class ElasticSearchRepository implements Repository
         $params = [
             'index' => $this->index,
             'type' => $this->class,
-            'id' => $id,
+            'id' => (string) $id,
         ];
 
         try {
@@ -121,7 +121,7 @@ class ElasticSearchRepository implements Repository
     {
         try {
             $this->client->delete([
-                'id' => $id,
+                'id' => (string) $id,
                 'index' => $this->index,
                 'type' => $this->class,
                 'refresh' => true,
@@ -281,8 +281,7 @@ class ElasticSearchRepository implements Repository
 
         foreach ($notAnalyzedFields as $field) {
             $fields[$field] = [
-                'type' => 'string',
-                'index' => 'not_analyzed',
+                'type' => 'keyword',
             ];
         }
 

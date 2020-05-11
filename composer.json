@@ -5,7 +5,7 @@
     "require": {
         "php": ">=7.2",
         "broadway/broadway": "^2.3.1",
-        "elasticsearch/elasticsearch": "^5.0"
+        "elasticsearch/elasticsearch": "^6.0"
     },
     "authors": [
       {

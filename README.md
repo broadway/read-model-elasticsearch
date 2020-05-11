@@ -16,11 +16,10 @@ $ composer require broadway/read-model-elasticsearch
 
 | Elasticsearch Version | broadway/read-model-elasticsearch version |
 | --------------------- | ----------------------------------------- |
-| >= 5.0                | ~0.2                                      |
-| >= 1.0, < 5.0         | ^0.1                                      |
-
- - If you are using Elasticsearch 5.0+ , use broadway/read-model-elasticsearch 0.2.
- - If you are using Elasticsearch 1.x or 2.x, use broadway/read-model-elasticsearch 0.1.
+| 6                     | 0.6                                       |
+| 5                     | 0.5                                       |
+| 2                     | 0.1                                       |
+| 1                     | 0.1                                       |
 
 ## Testing
 For testing you obviously need a running Elasticsearch instance, therefore

@@ -8,9 +8,16 @@ php:
   - 7.3
   - 7.4
 
+env:
+  - ELASTICSEARCH_DOWNLOAD_URL=https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.8.8.deb
+
 before_install:
+  # Disable XDebug speed up test execution.
   - phpenv config-rm xdebug.ini || return 0
-  - echo "memory_limit=2G" >> ~/.phpenv/versions/$(phpenv version-name)/etc/conf.d/travis.ini || return 0
+  - curl ${ELASTICSEARCH_DOWNLOAD_URL} -o elasticsearch.deb
+  - sudo dpkg -i --force-confnew elasticsearch.deb
+  - sudo chown -R elasticsearch:elasticsearch /etc/default/elasticsearch
+  - sudo service elasticsearch restart
 
 install:
   - make dependencies

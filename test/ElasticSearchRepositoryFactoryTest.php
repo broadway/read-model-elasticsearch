@@ -52,4 +52,21 @@ class ElasticSearchRepositoryFactoryTest extends TestCase
 
         $this->assertEquals($repository, $factory->create('test', 'Class', ['id']));
     }
+
+    /**
+     * @test
+     */
+    public function it_creates_an_elastic_search_repository_not_using_the_type_field()
+    {
+        $serializer = $this->getMockBuilder(Serializer::class)
+            ->getMock();
+        $client = $this->getMockBuilder(Client::class)
+            ->disableOriginalConstructor()
+            ->getMock();
+
+        $repository = new ElasticSearchRepository($client, $serializer, 'test', 'Class', [], false);
+        $factory = new ElasticSearchRepositoryFactory($client, $serializer);
+
+        self::assertEquals($repository, $factory->create('test', 'Class', [], false));
+    }
 }

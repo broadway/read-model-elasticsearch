@@ -40,18 +40,24 @@ class ElasticSearchRepository implements Repository
     /** @var string[] */
     private $notAnalyzedFields;
 
+    /** @var bool */
+    private $useType;
+
     public function __construct(
         Client $client,
         Serializer $serializer,
         string $index,
         string $class,
-        array $notAnalyzedFields = []
-    ) {
+        array $notAnalyzedFields = [],
+        bool $useType = true
+    )
+    {
         $this->client = $client;
         $this->serializer = $serializer;
         $this->index = $index;
         $this->class = $class;
         $this->notAnalyzedFields = $notAnalyzedFields;
+        $this->useType = $useType;
     }
 
     /**
@@ -62,14 +68,18 @@ class ElasticSearchRepository implements Repository
         Assertion::isInstanceOf($data, $this->class);
 
         $serializedReadModel = $this->serializer->serialize($data);
-
         $params = [
-            'index' => $this->index,
-            'type' => $serializedReadModel['class'],
-            'id' => $data->getId(),
-            'body' => $serializedReadModel['payload'],
+            'index'   => $this->index,
+            'id'      => $data->getId(),
             'refresh' => true,
         ];
+
+        if ($this->useType) {
+            $params['type'] = $this->class;
+        } else {
+            $serializedReadModel['payload']['_class'] = $this->class;
+        }
+        $params['body'] = $serializedReadModel['payload'];
 
         $this->client->index($params);
     }
@@ -81,9 +91,12 @@ class ElasticSearchRepository implements Repository
     {
         $params = [
             'index' => $this->index,
-            'type' => $this->class,
-            'id' => (string) $id,
+            'id'    => (string)$id,
         ];
+
+        if ($this->useType) {
+            $params['type'] = $this->class;
+        }
 
         try {
             $result = $this->client->get($params);
@@ -120,12 +133,17 @@ class ElasticSearchRepository implements Repository
     public function remove($id): void
     {
         try {
-            $this->client->delete([
-                'id' => (string) $id,
-                'index' => $this->index,
-                'type' => $this->class,
+            $params = [
+                'id'      => (string)$id,
+                'index'   => $this->index,
                 'refresh' => true,
-            ]);
+            ];
+
+            if ($this->useType) {
+                $params['type'] = $this->class;
+            }
+
+            $this->client->delete($params);
         } catch (Missing404Exception $e) { // It was already deleted or never existed, fine by us!
         }
     }
@@ -148,15 +166,20 @@ class ElasticSearchRepository implements Repository
     protected function search(array $query, array $facets = [], int $size = 500): array
     {
         try {
-            return $this->client->search([
+            $params = [
                 'index' => $this->index,
-                'type' => $this->class,
-                'body' => [
-                    'query' => $query,
+                'body'  => [
+                    'query'  => $query,
                     'facets' => $facets,
                 ],
-                'size' => $size,
-            ]);
+                'size'  => $size,
+            ];
+
+            if ($this->useType) {
+                $params['type'] = $this->class;
+            }
+
+            return $this->client->search($params);
         } catch (Missing404Exception $e) {
             return [];
         }
@@ -164,16 +187,19 @@ class ElasticSearchRepository implements Repository
 
     protected function query(array $query): array
     {
-        return $this->searchAndDeserializeHits(
-            [
-                'index' => $this->index,
-                'type' => $this->class,
-                'body' => [
-                    'query' => $query,
-                ],
-                'size' => 500,
-            ]
-        );
+        $params = [
+            'index' => $this->index,
+            'body'  => [
+                'query' => $query,
+            ],
+            'size'  => 500,
+        ];
+
+        if ($this->useType) {
+            $params['type'] = $this->class;
+        }
+
+        return $this->searchAndDeserializeHits($params);
     }
 
     private function buildFindByQuery(array $fields): array
@@ -196,7 +222,7 @@ class ElasticSearchRepository implements Repository
     {
         return $this->serializer->deserialize(
             [
-                'class' => $hit['_type'],
+                'class'   => $this->useType ? $hit['_type'] : $hit['_source']['_class'],
                 'payload' => $hit['_source'],
             ]
         );
@@ -225,8 +251,6 @@ class ElasticSearchRepository implements Repository
      */
     public function createIndex(): bool
     {
-        $class = $this->class;
-
         $indexParams = [
             'index' => $this->index,
         ];
@@ -244,9 +268,9 @@ class ElasticSearchRepository implements Repository
 
         $this->client->indices()->create($indexParams);
         $response = $this->client->cluster()->health([
-            'index' => $this->index,
+            'index'           => $this->index,
             'wait_for_status' => 'yellow',
-            'timeout' => '5s',
+            'timeout'         => '5s',
         ]);
 
         return isset($response['status']) && 'red' !== $response['status'];
@@ -258,16 +282,16 @@ class ElasticSearchRepository implements Repository
     public function deleteIndex(): bool
     {
         $indexParams = [
-            'index' => $this->index,
+            'index'   => $this->index,
             'timeout' => '5s',
         ];
 
         $this->client->indices()->delete($indexParams);
 
         $response = $this->client->cluster()->health([
-            'index' => $this->index,
+            'index'           => $this->index,
             'wait_for_status' => 'yellow',
-            'timeout' => '5s',
+            'timeout'         => '5s',
         ]);
 
         return isset($response['status']) && 'red' !== $response['status'];

@@ -70,10 +70,10 @@ class ElasticSearchRepository implements Repository
         $params = [
             'index' => $this->index,
             'id' => $data->getId(),
+            'body' => $serializedReadModel['payload'],
             'refresh' => true,
         ];
 
-        $params['body'] = $serializedReadModel['payload'];
         $this->client->index($params);
     }
 

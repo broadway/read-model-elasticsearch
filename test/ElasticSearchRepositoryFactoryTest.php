@@ -22,7 +22,7 @@ class ElasticSearchRepositoryFactoryTest extends TestCase
     /**
      * @test
      */
-    public function it_creates_an_elastic_search_repository()
+    public function itCreatesAnElasticSearchRepository(): void
     {
         $serializer = $this->getMockBuilder(Serializer::class)
             ->getMock();
@@ -33,13 +33,13 @@ class ElasticSearchRepositoryFactoryTest extends TestCase
         $repository = new ElasticSearchRepository($client, $serializer, 'test', 'Class');
         $factory = new ElasticSearchRepositoryFactory($client, $serializer);
 
-        $this->assertEquals($repository, $factory->create('test', 'Class'));
+        self::assertEquals($repository, $factory->create('test', 'Class'));
     }
 
     /**
      * @test
      */
-    public function it_creates_an_elastic_search_repository_containing_index_metadata()
+    public function itCreatesAnElasticSearchRepositoryContainingIndexMetadata(): void
     {
         $serializer = $this->getMockBuilder(Serializer::class)
             ->getMock();
@@ -50,23 +50,6 @@ class ElasticSearchRepositoryFactoryTest extends TestCase
         $repository = new ElasticSearchRepository($client, $serializer, 'test', 'Class', ['id']);
         $factory = new ElasticSearchRepositoryFactory($client, $serializer);
 
-        $this->assertEquals($repository, $factory->create('test', 'Class', ['id']));
-    }
-
-    /**
-     * @test
-     */
-    public function it_creates_an_elastic_search_repository_not_using_the_type_field()
-    {
-        $serializer = $this->getMockBuilder(Serializer::class)
-            ->getMock();
-        $client = $this->getMockBuilder(Client::class)
-            ->disableOriginalConstructor()
-            ->getMock();
-
-        $repository = new ElasticSearchRepository($client, $serializer, 'test', 'Class', [], false);
-        $factory = new ElasticSearchRepositoryFactory($client, $serializer);
-
-        self::assertEquals($repository, $factory->create('test', 'Class', [], false));
+        self::assertEquals($repository, $factory->create('test', 'Class', ['id']));
     }
 }

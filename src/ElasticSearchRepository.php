@@ -14,11 +14,13 @@ declare(strict_types=1);
 namespace Broadway\ReadModel\ElasticSearch;
 
 use Assert\Assertion;
+use Assert\AssertionFailedException;
 use Broadway\ReadModel\Identifiable;
 use Broadway\ReadModel\Repository;
 use Broadway\Serializer\Serializer;
 use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
+use stdClass;
 
 /**
  * Repository implementation using Elasticsearch as storage.
@@ -35,52 +37,43 @@ class ElasticSearchRepository implements Repository
     private $index;
 
     /** @var string */
-    private $class;
+    private $class_type;
 
     /** @var string[] */
     private $notAnalyzedFields;
-
-    /** @var bool */
-    private $useType;
 
     public function __construct(
         Client $client,
         Serializer $serializer,
         string $index,
-        string $class,
-        array $notAnalyzedFields = [],
-        bool $useType = true
-    )
-    {
+        string $class_type,
+        array $notAnalyzedFields = []
+    ) {
         $this->client = $client;
         $this->serializer = $serializer;
         $this->index = $index;
-        $this->class = $class;
+        $this->class_type = $class_type;
         $this->notAnalyzedFields = $notAnalyzedFields;
-        $this->useType = $useType;
     }
 
     /**
-     * {@inheritdoc}
+     * @throws AssertionFailedException
      */
     public function save(Identifiable $data): void
     {
-        Assertion::isInstanceOf($data, $this->class);
+        Assertion::true(
+            $data instanceof $this->class_type,
+            "Data object should be of type {$this->class_type}, as declared on the repository definition."
+        );
 
         $serializedReadModel = $this->serializer->serialize($data);
         $params = [
-            'index'   => $this->index,
-            'id'      => $data->getId(),
+            'index' => $this->index,
+            'id' => $data->getId(),
             'refresh' => true,
         ];
 
-        if ($this->useType) {
-            $params['type'] = $this->class;
-        } else {
-            $serializedReadModel['payload']['_class'] = $this->class;
-        }
         $params['body'] = $serializedReadModel['payload'];
-
         $this->client->index($params);
     }
 
@@ -91,12 +84,8 @@ class ElasticSearchRepository implements Repository
     {
         $params = [
             'index' => $this->index,
-            'id'    => (string)$id,
+            'id' => (string) $id,
         ];
-
-        if ($this->useType) {
-            $params['type'] = $this->class;
-        }
 
         try {
             $result = $this->client->get($params);
@@ -134,17 +123,14 @@ class ElasticSearchRepository implements Repository
     {
         try {
             $params = [
-                'id'      => (string)$id,
-                'index'   => $this->index,
+                'id' => (string) $id,
+                'index' => $this->index,
                 'refresh' => true,
             ];
 
-            if ($this->useType) {
-                $params['type'] = $this->class;
-            }
-
             $this->client->delete($params);
-        } catch (Missing404Exception $e) { // It was already deleted or never existed, fine by us!
+        } catch (Missing404Exception $e) {
+            // It was already deleted or never existed, fine by us!
         }
     }
 
@@ -168,16 +154,12 @@ class ElasticSearchRepository implements Repository
         try {
             $params = [
                 'index' => $this->index,
-                'body'  => [
-                    'query'  => $query,
+                'body' => [
+                    'query' => $query,
                     'facets' => $facets,
                 ],
-                'size'  => $size,
+                'size' => $size,
             ];
-
-            if ($this->useType) {
-                $params['type'] = $this->class;
-            }
 
             return $this->client->search($params);
         } catch (Missing404Exception $e) {
@@ -189,15 +171,11 @@ class ElasticSearchRepository implements Repository
     {
         $params = [
             'index' => $this->index,
-            'body'  => [
+            'body' => [
                 'query' => $query,
             ],
-            'size'  => 500,
+            'size' => 500,
         ];
-
-        if ($this->useType) {
-            $params['type'] = $this->class;
-        }
 
         return $this->searchAndDeserializeHits($params);
     }
@@ -214,7 +192,7 @@ class ElasticSearchRepository implements Repository
     private function buildFindAllQuery(): array
     {
         return [
-            'match_all' => new \stdClass(),
+            'match_all' => new stdClass(),
         ];
     }
 
@@ -222,7 +200,7 @@ class ElasticSearchRepository implements Repository
     {
         return $this->serializer->deserialize(
             [
-                'class'   => $this->useType ? $hit['_type'] : $hit['_source']['_class'],
+                'class' => $this->class_type,
                 'payload' => $hit['_source'],
             ]
         );
@@ -268,9 +246,9 @@ class ElasticSearchRepository implements Repository
 
         $this->client->indices()->create($indexParams);
         $response = $this->client->cluster()->health([
-            'index'           => $this->index,
+            'index' => $this->index,
             'wait_for_status' => 'yellow',
-            'timeout'         => '5s',
+            'timeout' => '5s',
         ]);
 
         return isset($response['status']) && 'red' !== $response['status'];
@@ -282,16 +260,16 @@ class ElasticSearchRepository implements Repository
     public function deleteIndex(): bool
     {
         $indexParams = [
-            'index'   => $this->index,
+            'index' => $this->index,
             'timeout' => '5s',
         ];
 
         $this->client->indices()->delete($indexParams);
 
         $response = $this->client->cluster()->health([
-            'index'           => $this->index,
+            'index' => $this->index,
             'wait_for_status' => 'yellow',
-            'timeout'         => '5s',
+            'timeout' => '5s',
         ]);
 
         return isset($response['status']) && 'red' !== $response['status'];

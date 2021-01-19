@@ -173,15 +173,13 @@ class ElasticSearchRepository implements Repository
 
     protected function query(array $query): array
     {
-        $params = [
+        return $this->searchAndDeserializeHits([
             'index' => $this->index,
             'body' => [
                 'query' => $query,
             ],
             'size' => 500,
-        ];
-
-        return $this->searchAndDeserializeHits($params);
+        ]);
     }
 
     private function buildFindByQuery(array $fields): array

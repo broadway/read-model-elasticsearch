@@ -22,7 +22,7 @@ class ElasticSearchRepositoryFactoryTest extends TestCase
     /**
      * @test
      */
-    public function itCreatesAnElasticSearchRepository(): void
+    public function it_creates_an_elastic_search_repository(): void
     {
         $serializer = $this->getMockBuilder(Serializer::class)
             ->getMock();
@@ -39,7 +39,7 @@ class ElasticSearchRepositoryFactoryTest extends TestCase
     /**
      * @test
      */
-    public function itCreatesAnElasticSearchRepositoryContainingIndexMetadata(): void
+    public function it_creates_an_elastic_search_repository_containing_index_metadata(): void
     {
         $serializer = $this->getMockBuilder(Serializer::class)
             ->getMock();

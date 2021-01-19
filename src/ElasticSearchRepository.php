@@ -20,6 +20,7 @@ use Broadway\ReadModel\Repository;
 use Broadway\Serializer\Serializer;
 use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
+use InvalidArgumentException;
 use stdClass;
 
 /**
@@ -57,24 +58,31 @@ class ElasticSearchRepository implements Repository
     }
 
     /**
+     * @param Identifiable $data
      * @throws AssertionFailedException
      */
     public function save(Identifiable $data): void
     {
-        Assertion::true(
-            $data instanceof $this->class_type,
+        if (!class_exists($this->class_type)) {
+            throw new InvalidArgumentException(
+                "The class type provided ({$this->class_type}) does not exists."
+            );
+        }
+
+        Assertion::isInstanceOf(
+            $data,
+            $this->class_type,
             "Data object should be of type {$this->class_type}, as declared on the repository definition."
         );
 
         $serializedReadModel = $this->serializer->serialize($data);
-        $params = [
+
+        $this->client->index([
             'index' => $this->index,
             'id' => $data->getId(),
             'body' => $serializedReadModel['payload'],
             'refresh' => true,
-        ];
-
-        $this->client->index($params);
+        ]);
     }
 
     /**
@@ -122,13 +130,11 @@ class ElasticSearchRepository implements Repository
     public function remove($id): void
     {
         try {
-            $params = [
+            $this->client->delete([
                 'id' => (string) $id,
                 'index' => $this->index,
                 'refresh' => true,
-            ];
-
-            $this->client->delete($params);
+            ]);
         } catch (Missing404Exception $e) {
             // It was already deleted or never existed, fine by us!
         }
@@ -152,16 +158,14 @@ class ElasticSearchRepository implements Repository
     protected function search(array $query, array $facets = [], int $size = 500): array
     {
         try {
-            $params = [
+            return $this->client->search([
                 'index' => $this->index,
                 'body' => [
                     'query' => $query,
                     'facets' => $facets,
                 ],
                 'size' => $size,
-            ];
-
-            return $this->client->search($params);
+            ]);
         } catch (Missing404Exception $e) {
             return [];
         }

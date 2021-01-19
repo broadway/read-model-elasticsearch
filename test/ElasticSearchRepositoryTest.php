@@ -56,7 +56,7 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
     /**
      * @test
      */
-    public function itCreatesAnIndexWithNonAnalyzedTerms(): void
+    public function it_creates_an_index_with_non_analyzed_terms(): void
     {
         $type = 'class';
         $nonAnalyzedTerm = 'name';
@@ -90,7 +90,7 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
     /**
      * @test
      */
-    public function itThrowsWhenTryingToSaveDifferentClassTypesInTheSameRepository(): void
+    public function it_throws_when_trying_to_save_different_class_types_in_the_same_repository(): void
     {
         $this->expectException(InvalidArgumentException::class);
         $this->expectExceptionMessage('Data object should be of type');
@@ -105,7 +105,7 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
     /**
      * @test
      */
-    public function itReturnsAllReadModels(): void
+    public function it_returns_all_read_models(): void
     {
         $model1 = $this->createReadModel('1', 'othillo', 'bar');
         $model2 = $this->createReadModel('2', 'asm89', 'baz');

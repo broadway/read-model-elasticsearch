@@ -13,7 +13,7 @@ declare(strict_types=1);
 
 namespace Broadway\ReadModel\ElasticSearch;
 
-use Assert\InvalidArgumentException;
+use Broadway\ReadModel\ElasticSearch\Exception\MultiTypeIndexNotAllowedException;
 use Broadway\ReadModel\ElasticSearch\Utils\AnotherRepositoryTestReadModel;
 use Broadway\ReadModel\Repository;
 use Broadway\ReadModel\Testing\RepositoryTestCase;
@@ -92,7 +92,7 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
      */
     public function it_throws_when_trying_to_save_different_class_types_in_the_same_repository(): void
     {
-        $this->expectException(InvalidArgumentException::class);
+        $this->expectException(MultiTypeIndexNotAllowedException::class);
         $this->expectExceptionMessage('Data object should be of type');
 
         $model1 = $this->createReadModel('1', 'othillo', 'bar');

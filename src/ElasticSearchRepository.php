@@ -13,14 +13,12 @@ declare(strict_types=1);
 
 namespace Broadway\ReadModel\ElasticSearch;
 
-use Assert\Assertion;
-use Assert\AssertionFailedException;
+use Broadway\ReadModel\ElasticSearch\Exception\MultiTypeIndexNotAllowedException;
 use Broadway\ReadModel\Identifiable;
 use Broadway\ReadModel\Repository;
 use Broadway\Serializer\Serializer;
 use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
-use InvalidArgumentException;
 use stdClass;
 
 /**
@@ -59,24 +57,17 @@ class ElasticSearchRepository implements Repository
 
     /**
      * @param Identifiable $data
-     * @throws AssertionFailedException
+     * @throws MultiTypeIndexNotAllowedException
      */
     public function save(Identifiable $data): void
     {
-        if (!class_exists($this->class_type)) {
-            throw new InvalidArgumentException(
-                "The class type provided ({$this->class_type}) does not exists."
+        if (!$data instanceof $this->class_type) {
+            throw new MultiTypeIndexNotAllowedException(
+                "Data object should be of type {$this->class_type}, as declared on the repository definition."
             );
         }
 
-        Assertion::isInstanceOf(
-            $data,
-            $this->class_type,
-            "Data object should be of type {$this->class_type}, as declared on the repository definition."
-        );
-
         $serializedReadModel = $this->serializer->serialize($data);
-
         $this->client->index([
             'index' => $this->index,
             'id' => $data->getId(),

@@ -13,12 +13,13 @@ declare(strict_types=1);
 
 namespace Broadway\ReadModel\ElasticSearch;
 
-use Assert\Assertion;
+use Broadway\ReadModel\ElasticSearch\Exception\MultiTypeIndexNotAllowedException;
 use Broadway\ReadModel\Identifiable;
 use Broadway\ReadModel\Repository;
 use Broadway\Serializer\Serializer;
 use Elasticsearch\Client;
 use Elasticsearch\Common\Exceptions\Missing404Exception;
+use stdClass;
 
 /**
  * Repository implementation using Elasticsearch as storage.
@@ -35,7 +36,7 @@ class ElasticSearchRepository implements Repository
     private $index;
 
     /** @var string */
-    private $class;
+    private $class_type;
 
     /** @var string[] */
     private $notAnalyzedFields;
@@ -44,34 +45,35 @@ class ElasticSearchRepository implements Repository
         Client $client,
         Serializer $serializer,
         string $index,
-        string $class,
+        string $class_type,
         array $notAnalyzedFields = []
     ) {
         $this->client = $client;
         $this->serializer = $serializer;
         $this->index = $index;
-        $this->class = $class;
+        $this->class_type = $class_type;
         $this->notAnalyzedFields = $notAnalyzedFields;
     }
 
     /**
-     * {@inheritdoc}
+     * @param Identifiable $data
+     * @throws MultiTypeIndexNotAllowedException
      */
     public function save(Identifiable $data): void
     {
-        Assertion::isInstanceOf($data, $this->class);
+        if (!$data instanceof $this->class_type) {
+            throw new MultiTypeIndexNotAllowedException(
+                "Data object should be of type {$this->class_type}, as declared on the repository definition."
+            );
+        }
 
         $serializedReadModel = $this->serializer->serialize($data);
-
-        $params = [
+        $this->client->index([
             'index' => $this->index,
-            'type' => $serializedReadModel['class'],
             'id' => $data->getId(),
             'body' => $serializedReadModel['payload'],
             'refresh' => true,
-        ];
-
-        $this->client->index($params);
+        ]);
     }
 
     /**
@@ -81,7 +83,6 @@ class ElasticSearchRepository implements Repository
     {
         $params = [
             'index' => $this->index,
-            'type' => $this->class,
             'id' => (string) $id,
         ];
 
@@ -123,10 +124,10 @@ class ElasticSearchRepository implements Repository
             $this->client->delete([
                 'id' => (string) $id,
                 'index' => $this->index,
-                'type' => $this->class,
                 'refresh' => true,
             ]);
-        } catch (Missing404Exception $e) { // It was already deleted or never existed, fine by us!
+        } catch (Missing404Exception $e) {
+            // It was already deleted or never existed, fine by us!
         }
     }
 
@@ -150,7 +151,6 @@ class ElasticSearchRepository implements Repository
         try {
             return $this->client->search([
                 'index' => $this->index,
-                'type' => $this->class,
                 'body' => [
                     'query' => $query,
                     'facets' => $facets,
@@ -164,16 +164,13 @@ class ElasticSearchRepository implements Repository
 
     protected function query(array $query): array
     {
-        return $this->searchAndDeserializeHits(
-            [
-                'index' => $this->index,
-                'type' => $this->class,
-                'body' => [
-                    'query' => $query,
-                ],
-                'size' => 500,
-            ]
-        );
+        return $this->searchAndDeserializeHits([
+            'index' => $this->index,
+            'body' => [
+                'query' => $query,
+            ],
+            'size' => 500,
+        ]);
     }
 
     private function buildFindByQuery(array $fields): array
@@ -188,7 +185,7 @@ class ElasticSearchRepository implements Repository
     private function buildFindAllQuery(): array
     {
         return [
-            'match_all' => new \stdClass(),
+            'match_all' => new stdClass(),
         ];
     }
 
@@ -196,7 +193,7 @@ class ElasticSearchRepository implements Repository
     {
         return $this->serializer->deserialize(
             [
-                'class' => $hit['_type'],
+                'class' => $this->class_type,
                 'payload' => $hit['_source'],
             ]
         );
@@ -225,8 +222,6 @@ class ElasticSearchRepository implements Repository
      */
     public function createIndex(): bool
     {
-        $class = $this->class;
-
         $indexParams = [
             'index' => $this->index,
         ];

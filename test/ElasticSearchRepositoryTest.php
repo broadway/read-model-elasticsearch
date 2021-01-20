@@ -13,6 +13,8 @@ declare(strict_types=1);
 
 namespace Broadway\ReadModel\ElasticSearch;
 
+use Broadway\ReadModel\ElasticSearch\Exception\MultiTypeIndexNotAllowedException;
+use Broadway\ReadModel\ElasticSearch\Utils\AnotherRepositoryTestReadModel;
 use Broadway\ReadModel\Repository;
 use Broadway\ReadModel\Testing\RepositoryTestCase;
 use Broadway\ReadModel\Testing\RepositoryTestReadModel;
@@ -42,15 +44,19 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
         );
     }
 
-    protected function createElasticSearchRepository(Client $client, Serializer $serializer, string $index, string $class)
-    {
-        return new ElasticSearchRepository($client, $serializer, $index, $class);
+    protected function createElasticSearchRepository(
+        Client $client,
+        Serializer $serializer,
+        string $index,
+        string $class_type
+    ): ElasticSearchRepository {
+        return new ElasticSearchRepository($client, $serializer, $index, $class_type);
     }
 
     /**
      * @test
      */
-    public function it_creates_an_index_with_non_analyzed_terms()
+    public function it_creates_an_index_with_non_analyzed_terms(): void
     {
         $type = 'class';
         $nonAnalyzedTerm = 'name';
@@ -78,25 +84,28 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
                 ],
             ],
         ];
-        $this->assertEquals($expectedMapping, $mapping);
+        self::assertEquals($expectedMapping, $mapping);
     }
 
     /**
      * @test
      */
-    public function it_throws_when_saving_a_readmodel_of_other_type_than_configured()
+    public function it_throws_when_trying_to_save_different_class_types_in_the_same_repository(): void
     {
-        $this->expectException('Assert\InvalidArgumentException');
-        $readModel = $this->prophesize('\Broadway\ReadModel\Identifiable');
+        $this->expectException(MultiTypeIndexNotAllowedException::class);
+        $this->expectExceptionMessage('Data object should be of type');
 
-        $this->repository->save($readModel->reveal());
+        $model1 = $this->createReadModel('1', 'othillo', 'bar');
+        $this->repository->save($model1);
+
+        $model2 = new AnotherRepositoryTestReadModel('2', 'someoneelse');
+        $this->repository->save($model2);
     }
 
     /**
      * @test
-     * {@inheritdoc}
      */
-    public function it_returns_all_read_models()
+    public function it_returns_all_read_models(): void
     {
         $model1 = $this->createReadModel('1', 'othillo', 'bar');
         $model2 = $this->createReadModel('2', 'asm89', 'baz');
@@ -107,9 +116,9 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
         $this->repository->save($model3);
 
         $allReadModels = $this->repository->findAll();
-        $this->assertTrue(in_array($model1, $allReadModels));
-        $this->assertTrue(in_array($model2, $allReadModels));
-        $this->assertTrue(in_array($model3, $allReadModels));
+        self::assertContainsEquals($model1, $allReadModels);
+        self::assertContainsEquals($model2, $allReadModels);
+        self::assertContainsEquals($model3, $allReadModels);
     }
 
     public function tearDown(): void
@@ -121,7 +130,7 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
         }
     }
 
-    private function createClient()
+    private function createClient(): Client
     {
         return (new ElasticSearchClientFactory())->create(['hosts' => ['localhost:9200']]);
     }

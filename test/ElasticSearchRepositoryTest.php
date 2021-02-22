@@ -121,6 +121,39 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
         self::assertContainsEquals($model3, $allReadModels);
     }
 
+    /**
+     * @test
+     */
+    public function it_creates_an_index_with_an_alias()
+    {
+        $type             = 'class';
+        $nonAnalyzedTerm  = 'name';
+        $alias            = 'test_non_analyzed_index';
+        $this->repository = new ElasticSearchRepository(
+            $this->client,
+            new SimpleInterfaceSerializer(),
+            $alias,
+            $type,
+            array($nonAnalyzedTerm)
+        );
+
+        $suffix = uniqid('', false);
+        $index  = $alias . $suffix;
+
+        $this->repository->createIndex($suffix);
+        $this->client->cluster()->health(array('index' => $index, 'wait_for_status' => 'yellow', 'timeout' => '10s'));
+
+        $expectedAlias = [
+            $index => [
+                'aliases' => [
+                    $alias => []
+                ]
+            ]
+        ];
+
+        $this->assertEquals($expectedAlias, $this->client->indices()->getAlias(['name' => $alias]));
+    }
+
     public function tearDown(): void
     {
         $this->client->indices()->delete(['index' => 'test_index']);

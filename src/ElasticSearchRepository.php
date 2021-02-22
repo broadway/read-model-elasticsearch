@@ -27,19 +27,19 @@ use stdClass;
 class ElasticSearchRepository implements Repository
 {
     /** @var Client */
-    private $client;
+    protected $client;
 
     /** @var Serializer */
-    private $serializer;
+    protected $serializer;
 
     /** @var string */
-    private $index;
+    protected $index;
 
     /** @var string */
-    private $class_type;
+    protected $class_type;
 
     /** @var string[] */
-    private $notAnalyzedFields;
+    protected $notAnalyzedFields;
 
     public function __construct(
         Client $client,
@@ -131,7 +131,7 @@ class ElasticSearchRepository implements Repository
         }
     }
 
-    private function searchAndDeserializeHits(array $query): array
+    protected function searchAndDeserializeHits(array $query): array
     {
         try {
             $result = $this->client->search($query);
@@ -173,7 +173,7 @@ class ElasticSearchRepository implements Repository
         ]);
     }
 
-    private function buildFindByQuery(array $fields): array
+    protected function buildFindByQuery(array $fields): array
     {
         return [
             'bool' => [
@@ -182,14 +182,14 @@ class ElasticSearchRepository implements Repository
         ];
     }
 
-    private function buildFindAllQuery(): array
+    protected function buildFindAllQuery(): array
     {
         return [
             'match_all' => new stdClass(),
         ];
     }
 
-    private function deserializeHit(array $hit): Identifiable
+    protected function deserializeHit(array $hit): Identifiable
     {
         return $this->serializer->deserialize(
             [
@@ -199,12 +199,12 @@ class ElasticSearchRepository implements Repository
         );
     }
 
-    private function deserializeHits(array $hits): array
+    protected function deserializeHits(array $hits): array
     {
         return array_map([$this, 'deserializeHit'], $hits);
     }
 
-    private function buildFilter(array $filter): array
+    protected function buildFilter(array $filter): array
     {
         $retval = [];
 
@@ -268,7 +268,7 @@ class ElasticSearchRepository implements Repository
         return isset($response['status']) && 'red' !== $response['status'];
     }
 
-    private function createNotAnalyzedFieldsMapping(array $notAnalyzedFields): array
+    protected function createNotAnalyzedFieldsMapping(array $notAnalyzedFields): array
     {
         $fields = [];
 

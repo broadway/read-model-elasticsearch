@@ -130,7 +130,7 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
         }
     }
 
-    private function createClient(): Client
+    protected function createClient(): Client
     {
         return (new ElasticSearchClientFactory())->create(['hosts' => ['localhost:9200']]);
     }

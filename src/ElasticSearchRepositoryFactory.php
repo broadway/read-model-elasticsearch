@@ -24,10 +24,10 @@ use Elasticsearch\Client;
 class ElasticSearchRepositoryFactory implements RepositoryFactory
 {
     /** @var Client */
-    private $client;
+    protected $client;
 
     /** @var Serializer */
-    private $serializer;
+    protected $serializer;
 
     public function __construct(Client $client, Serializer $serializer)
     {

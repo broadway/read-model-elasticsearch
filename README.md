@@ -4,7 +4,7 @@ broadway/read-model-elasticsearch
 Elasticsearch read model implementation for [broadway/broadway](https://github.com/broadway/broadway) 
 using [elastic/elasticsearch-php](https://github.com/elastic/elasticsearch-php)
 
-[![Build Status](https://travis-ci.org/broadway/read-model-elasticsearch.svg?branch=master)](https://travis-ci.org/broadway/read-model-elasticsearch)
+![build status](https://github.com/broadway/read-model-elasticsearch/actions/workflows/ci.yml/badge.svg)
 
 ## Installation
 

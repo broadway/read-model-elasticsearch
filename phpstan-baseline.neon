@@ -1,12 +1,175 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot cast mixed to string\\.$#"
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchClientFactory\:\:create\(\) has parameter \$config with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchClientFactory.php
+
+		-
+			message: '#^Cannot access offset ''hits'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
 			count: 2
 			path: src/ElasticSearchRepository.php
 
 		-
-			message: "#^Method Broadway\\\\ReadModel\\\\ElasticSearch\\\\ElasticSearchRepository\\:\\:deserializeHit\\(\\) should return Broadway\\\\ReadModel\\\\Identifiable but returns mixed\\.$#"
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:__construct\(\) has parameter \$notAnalyzedFields with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
 			count: 1
 			path: src/ElasticSearchRepository.php
 
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:buildFilter\(\) has parameter \$filter with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:buildFilter\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:buildFindAllQuery\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:buildFindByQuery\(\) has parameter \$fields with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:buildFindByQuery\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:createNotAnalyzedFieldsMapping\(\) has parameter \$notAnalyzedFields with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:createNotAnalyzedFieldsMapping\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:deserializeHit\(\) has parameter \$hit with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:deserializeHit\(\) should return Broadway\\ReadModel\\Identifiable but returns mixed\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:deserializeHits\(\) has parameter \$hits with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:deserializeHits\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:findAll\(\) should return array\<Broadway\\ReadModel\\Identifiable\> but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:findBy\(\) has parameter \$fields with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:findBy\(\) should return array\<Broadway\\ReadModel\\Identifiable\> but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:query\(\) has parameter \$query with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:query\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:search\(\) has parameter \$facets with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:search\(\) has parameter \$query with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:search\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:searchAndDeserializeHits\(\) has parameter \$query with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:searchAndDeserializeHits\(\) return type has no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Parameter \#1 \$hits of method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:deserializeHits\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Property Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepository\:\:\$notAnalyzedFields \(array\<string\>\) does not accept array\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/ElasticSearchRepository.php
+
+		-
+			message: '#^Method Broadway\\ReadModel\\ElasticSearch\\ElasticSearchRepositoryFactory\:\:create\(\) has parameter \$notAnalyzedFields with no value type specified in iterable type array\.$#'
+			identifier: missingType.iterableValue
+			count: 1
+			path: src/ElasticSearchRepositoryFactory.php

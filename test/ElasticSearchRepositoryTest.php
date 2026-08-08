@@ -21,11 +21,13 @@ use Broadway\ReadModel\Testing\RepositoryTestReadModel;
 use Broadway\Serializer\Serializer;
 use Broadway\Serializer\SimpleInterfaceSerializer;
 use Elasticsearch\Client;
+use PHPUnit\Framework\Attributes\Group;
+use PHPUnit\Framework\Attributes\Test;
 
 /**
- * @group functional
  * @requires extension curl
  */
+#[Group('functional')]
 class ElasticSearchRepositoryTest extends RepositoryTestCase
 {
     private $client;
@@ -53,9 +55,7 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
         return new ElasticSearchRepository($client, $serializer, $index, $class_type);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_an_index_with_non_analyzed_terms(): void
     {
         $type = 'class';
@@ -87,9 +87,7 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
         self::assertEquals($expectedMapping, $mapping);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_throws_when_trying_to_save_different_class_types_in_the_same_repository(): void
     {
         $this->expectException(MultiTypeIndexNotAllowedException::class);
@@ -102,9 +100,7 @@ class ElasticSearchRepositoryTest extends RepositoryTestCase
         $this->repository->save($model2);
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_returns_all_read_models(): void
     {
         $model1 = $this->createReadModel('1', 'othillo', 'bar');

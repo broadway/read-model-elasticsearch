@@ -16,12 +16,11 @@ namespace Broadway\ReadModel\ElasticSearch;
 use Broadway\Serializer\Serializer;
 use Elasticsearch\Client;
 use PHPUnit\Framework\TestCase;
+use PHPUnit\Framework\Attributes\Test;
 
 class ElasticSearchRepositoryFactoryTest extends TestCase
 {
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_an_elastic_search_repository(): void
     {
         $serializer = $this->getMockBuilder(Serializer::class)
@@ -36,9 +35,7 @@ class ElasticSearchRepositoryFactoryTest extends TestCase
         self::assertEquals($repository, $factory->create('test', 'Class'));
     }
 
-    /**
-     * @test
-     */
+    #[Test]
     public function it_creates_an_elastic_search_repository_containing_index_metadata(): void
     {
         $serializer = $this->getMockBuilder(Serializer::class)
